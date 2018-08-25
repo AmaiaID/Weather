@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+	<meta charset="utf-8">
+	<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="weather.css">
+</head>
+
+<body>
+	<div class="row" id="myWeather">
+		<div>
+			<h2> My weather App</h2>
+		</div>
+		<input type="text" placeholder="Search CITY" id="searchBox">
+		<button id="searchB"> Search </button>
+	</div>
+
+	<div class="container" id="app">
+		<!--// Remove the headings if there search is not executed-->
+		<div v-if="restDays.length==0 || currentDay.length==0">
+		</div>
+		<div v-else>
+			<h2> Today </h2>
+			<div id="infoSection">
+				<div class="container-fluid row">
+					<div class="row">
+							<p>{{currentDay[0].day}}</p>
+							<p>{{cityName}}</p>								
+							<p>{{currentDay[0].dt_txt.slice(11,16)}} h</p>
+							<p>{{currentDay[0].main.temp}}ºC</p>										
+							<p>{{currentDay[0].weather[0].description}}</p>
+							<img v-bind:src="'http://openweathermap.org/img/w/'+data.list[0].weather[0].icon+'.png'">
+					</div>
+				</div>
+			</div>
+
+			<div id="accordion">
+				<div class="card">
+					<div class="row container-fluid">
+						<div class="card-header" id="headingOne">
+							<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"> {{currentDay[0].day}}</button>
+						</div>
+
+						<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+							<div class="card-body">
+								<div v-for="x in currentDay">
+									<div class="row box">
+										<div class="col-lg-6">
+											{{x.dt_txt.slice(11,16)}} h {{x.main.temp}} ºC
+										</div>
+										<div class="col-lg-6">
+											{{x.weather[0].description}}
+											<img v-bind:src="'http://openweathermap.org/img/w/'+x.weather[0].icon+'.png'">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<h2>This week</h2>
+               
+				<div class="card">
+					<div class="row container-fluid">
+						<div class="card-header" id="headingTwo">
+							<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> {{secondDay[0].day}}</button>
+						</div>
+						<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+							<div class="card-body">
+								<div  v-for="x in secondDay">
+									<div class="row box">
+										<div class="col-lg-6">
+											{{x.dt_txt.slice(11,16)}} h {{x.main.temp}} ºC
+										</div>
+										<div class="col-lg-6">
+											{{x.weather[0].description}}
+											<img v-bind:src="'http://openweathermap.org/img/w/'+x.weather[0].icon+'.png'">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header" id="headingThree">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> {{thirdDay[0].day}}</button>
+					</div>
+
+					<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+						<div class="card-body">
+							<div class="row container-fluid">
+								<div  v-for="x in thirdDay">
+									<div class="row box">
+										<div class="col-lg-6">
+											{{x.dt_txt.slice(11,16)}}h {{x.main.temp}}ºC
+
+										</div>
+										<div class="col-lg-6">
+											{{x.weather[0].description}}
+											<img v-bind:src="'http://openweathermap.org/img/w/'+x.weather[0].icon+'.png'">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="card">
+					<div class="card-header" id="headingFour">
+						<h5 class="mb-0">
+							<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+							{{fourthDay[0].day}}  
+        </button>
+						</h5>
+					</div>
+					<div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+						<div class="row container-fluid">
+							<div v-for="x in fourthDay">
+								<div class="row box">
+									<div class="col-lg-6">
+										{{x.dt_txt.slice(11,16)}}
+										{{x.main.temp}}ºC
+									</div>
+									<div class="col-lg-6">
+										{{x.weather[0].description}}
+										<img v-bind:src="'http://openweathermap.org/img/w/'+x.weather[0].icon+'.png'">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script src="weather.js"></script>
+
+</body>
+
+</html>

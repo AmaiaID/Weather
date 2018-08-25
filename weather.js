@@ -1,16 +1,22 @@
 var city;
-
 city = "Barcelona";
-
 
 var data;
 
-/*
-api.openweathermap.org/data/2.5/forecast?q=London,us&mode=xml*/
+var app = new Vue({
+	el: '#app',
+	data: {
 
-/*
-https://api.openweathermap.org/data/2.5/weather?q="+city+"&units=metric&APPID=3a07bd635152fe297149025f63c75bcd"
-*/
+		currentDay: [],
+		restDays: [],
+		secondDay: [],
+		thirdDay: [],
+		fourthDay: [],
+		fifthDay: [],
+		cityName: ""
+
+	}
+});
 
 
 function getCity(city) {
@@ -28,27 +34,18 @@ function getCity(city) {
 		console.log(json)
 
 		data = json;
-		/*createBody();*/
-
+		
 		separateData();
+		separateDays();
 
-		var myDate = new Date(data.list[0].dt_txt.slice(0, 10));
-		console.log(myDate.getDay());
+		app.cityName = data.city.name;
 
-		/*
-		app.weatherInfo=data.list;*/
 
 		console.log(data);
 	}).catch(function (error) {
 		console.log("Request failed:" + error.message);
 	});
-
 }
-/*
-var weather= document.getElementById("searchBox")
-data.weather.description
-data.weater
-*/
 
 
 document.getElementById("searchB").addEventListener("click", function () {
@@ -58,127 +55,107 @@ document.getElementById("searchB").addEventListener("click", function () {
 });
 
 
+// The separateData function will first transform the date so that it matches with the format of the jSON. Afterwards, the values will be separated into two: currentDay and restDays. 
+
 function separateData() {
-	app.currentDay = []; // They need to be empty otherwise data duplicates after a search is made
+	app.currentDay = []; //empy the arrays after a search is made
 	app.restDays = [];
-	
-	
-	
-	
-	/*
-			var today = new Date();
-		var dd = today.getDate();
-		var mm = today.getMonth() + 1; //January is 0!
-		var yyyy = today.getFullYear();
-		
+	app.secondDay = [];
+	app.thirdDay = [];
+	app.fourthDay = [];
+	app.fifthDay = [];
 
-		if (dd < 10) {
-			dd = '0' + dd
-		}
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth() + 1; //January is 0 
+	var yyyy = today.getFullYear();
 
-		if (mm < 10) {
-			mm = '0' + mm
-		}
+	if (dd < 10) {
+		dd = '0' + dd
+	}
 
-		today = yyyy+ '-' + mm + '-' + dd;*/
+	if (mm < 10) {
+		mm = '0' + mm
+	}
 
-	
-	
-	
+	today = yyyy + '-' + mm + '-' + dd;
 
 	for (i = 0; i < data.list.length; i++) {
 		var day;
 
+		var jsonDate = new Date(data.list[i].dt_txt.slice(0, 10)); //The date in the jSon corresponds to the first 10 digits. We need to compare this tade with todays date. 
 
-		var jsonDate = new Date(data.list[i].dt_txt.slice(0, 10)); // esto es una fecha 
-
-if(data.list[i].dt_txt.slice(0, 10)==today){ 
-console.log(today)}
-
-
-
-		switch (jsonDate.getDay()) { // devuelve un numero que corresponde a un día
-			case 0:
-				day = "Sunday";
-				break;
-			case 1:
-				day = "Monday";
-				break;
-			case 2:
-				day = "Tuesday";
-				break;
-			case 3:
-				day = "Wednesday";
-				break;
-			case 4:
-				day = "Thursday";
-				break;
-			case 5:
-				day = "Friday";
-				break;
-			case 6:
-				day = "Saturday";
+		if (data.list[i].dt_txt.slice(0, 10) == today) {
+			console.log(today)
 		}
 
-		data.list[i].day = day;
-
-		if (i < 8) {
-
+		data.list[i].day = getNumberDay(jsonDate.getDay()); // adds days to the json
+		console.log(data.list[i].day)
+	
+		//The values correspoding with current day 
+		if (data.list[i].day == data.list[0].day) {
+			console.log(data.list[i].day);
 			app.currentDay.push(data.list[i]);
-
+			
+		// The rest of the values 
 		} else {
 			app.restDays.push(data.list[i])
 		}
+		}
+}
+
+// The information regarding the rest of the days will be split into specific days. 
+
+function separateDays() {
+
+	for (var i = 0; i < app.restDays.length; i++) {
+
+		if (i < 8) {
+			app.secondDay.push(app.restDays[i])
+		} else if (i >= 8 && i < 16) {
+
+			app.thirdDay.push(app.restDays[i])
+			
+		} else if (i >= 16 && i < 24) {
+			app.fourthDay.push(app.restDays[i])
+			
+		} else {
+			app.fifthDay.push(app.restDays[i])
+		}
 
 	}
-
 }
 
 
-
-
-
-/*
-function getIcon(){
-
-var icon=("<img src='http://openweathermap.org/img/w/" + data.weather[0].icon+ ".png'>")
-document.getElementById("icono").innerHTML= icon;    // no hace falta, estoy usando solo v-for
-}
-*/
-
-/*
-function createBody(){
-
-document.getElementById("desc").innerHTML="Description " + data.weather[0].description;
-
-	
-	  var description= document.createElement("p");
-        description.textContent= data.list[0].weather[0].description;
-        document.getElementById("desc").appendChild(description); 
-*/
-
-/*document.getElementById("max").innerHTML=data.main.temp_max;
-document.getELementById("temperature").innerHTML= data.main.temp;
-document.getElementById("min").innerHTML=data.main.temp_min;*/
-
-
-/*}*/
-
-
-
-///	var statecol = document.createElement("td");
-//statecol.textContent = membersHouse[i].state;
-//	tr.appendChild(statecol);
-
-
-var app = new Vue({
-	el: '#app',
-	data: {
-		/*weatherInfo: [],*/
-
-
-
+function getNumberDay(number) {
+	switch (number) { //It will return a number that will correspond to an specific date
+		case 0:
+			return "Sunday";
+			break;
+		case 1:
+			return "Monday";
+			break;
+		case 2:
+			return "Tuesday";
+			break;
+		case 3:
+			return "Wednesday";
+			break;
+		case 4:
+			return "Thursday";
+			break;
+		case 5:
+			return "Friday";
+			break;
+		case 6:
+			return "Saturday";
 	}
+}
 
+// Execute the search by pressing enter as well, instead of clicking on searchB
 
-});
+document.getElementById('searchBox').onkeypress=function(e){
+    if(e.keyCode==13){
+        document.getElementById('searchB').click();
+    }
+}
