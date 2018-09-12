@@ -6,7 +6,6 @@ var data;
 var app = new Vue({
 	el: '#app',
 	data: {
-
 		currentDay: [],
 		restDays: [],
 		secondDay: [],
@@ -14,7 +13,6 @@ var app = new Vue({
 		fourthDay: [],
 		fifthDay: [],
 		cityName: ""
-
 	}
 });
 
@@ -32,9 +30,7 @@ function getCity(city) {
 	}).then(function (json) {
 
 		console.log(json)
-
 		data = json;
-		
 		separateData();
 		separateDays();
 
@@ -107,13 +103,10 @@ function separateData() {
 // The information regarding the rest of the days will be split into specific days. 
 
 function separateDays() {
-
 	for (var i = 0; i < app.restDays.length; i++) {
-
 		if (i < 8) {
 			app.secondDay.push(app.restDays[i])
 		} else if (i >= 8 && i < 16) {
-
 			app.thirdDay.push(app.restDays[i])
 			
 		} else if (i >= 16 && i < 24) {
@@ -122,10 +115,8 @@ function separateDays() {
 		} else {
 			app.fifthDay.push(app.restDays[i])
 		}
-
 	}
 }
-
 
 function getNumberDay(number) {
 	switch (number) { //It will return a number that will correspond to an specific date
